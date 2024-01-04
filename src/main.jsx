@@ -24,6 +24,7 @@ const router = createBrowserRouter([
         element: <Privete_Route>
           <Home></Home>
         </Privete_Route>,
+        loader: () => fetch('https://react-chef-recipe-server.vercel.app/chef')
       },
       {
         path: 'blog',
