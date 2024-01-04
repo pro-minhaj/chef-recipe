@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { GithubAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import app from "../Firebase/Firebase_Config";
 
 export const userContext = createContext(null);
@@ -45,6 +45,11 @@ const Auth_Context = ({children}) => {
        return signInWithEmailAndPassword(auth, email, password);
     }
 
+    // Forget Password
+    const forgetPassword = (email) => {
+       return sendPasswordResetEmail(auth, email)
+    }
+
     // Log Out
     const logOut = () => {
        return signOut(auth);
@@ -65,6 +70,7 @@ const Auth_Context = ({children}) => {
         nameUpdate,
         emailVerification,
         singInUser,
+        forgetPassword,
         googleSingUp,
         githubSingUp,
         logOut,

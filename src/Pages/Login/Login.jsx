@@ -1,11 +1,12 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../../Auth_Context/Auth_Context";
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    const { singInUser } = useContext(userContext);
+    const { singInUser, forgetPassword } = useContext(userContext);
     const navigate = useNavigate();
+    const emailRef = useRef();
 
     // Toast
     const success = (success) => toast.success(success);
@@ -38,6 +39,26 @@ const Login = () => {
             error(e.message.substr(10))
         })
     }
+
+    // Handle Forget Password
+    const handleForgetPass = () => {
+        const loading = toast.loading('Loading...');
+        () => loading;
+        if(emailRef.current.value === ''){
+            toast.dismiss(loading);
+            return error('Places Email Flied Enter Email')
+        }
+        forgetPassword(emailRef.current.value)
+        .then(() => {
+            toast.dismiss(loading);
+            success('Email Sent SuccessFull')
+        })
+        .catch(e => {
+            toast.dismiss(loading);
+            error(e.message.substr(10))
+        })
+    }
+
     return (
         <div className="h-[68vh] flex justify-center items-center">
             <div className="w-full max-w-96">
@@ -46,7 +67,7 @@ const Login = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                             Email
                         </label>
-                        <input className="shadow text-slate-300 appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" required />
+                        <input ref={emailRef} className="shadow text-slate-300 appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" required />
                     </div>
                     <div className="mb-6">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
@@ -58,9 +79,9 @@ const Login = () => {
                         <button className="bg-blue-500 btn border-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                             Sign In
                         </button>
-                        <a className="inline-block align-baseline font-bold text-base hover:text-blue-800" href="#">
+                        <button onClick={handleForgetPass} type="button" className="inline-block align-baseline font-bold text-base hover:text-blue-800">
                             Forgot Password?
-                        </a>
+                        </button>
                     </div>
                     <p className="mt-4 text-black">Create a New Account <Link className="text-red-600 font-medium" to="/register">Register</Link></p>
                 </form>
